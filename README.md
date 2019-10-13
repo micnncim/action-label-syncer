@@ -4,11 +4,12 @@
 [![Release](https://badgen.net/github/release/micnncim/action-label-syncer?icon=github)](https://github.com/micnncim/action-label-syncer/releases)
 [![Marketplace](https://badgen.net/badge/marketplace/action-label-syncer?icon=github)](https://github.com/marketplace/actions/label-syncer)
 
-Action to sync GitHub labels in the declarative way.
+Action to sync GitHub labels in the declarative way.  
+By using this action, you can sync current labels with configured labels in a YAML manifest.
 
 ## Usage
 
-### Create manifest of GitHub labels
+### Create YAML manifest of GitHub labels
 
 ```yaml
 - color: d73a4a
