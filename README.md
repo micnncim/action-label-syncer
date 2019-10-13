@@ -8,9 +8,9 @@ Action to sync GitHub labels in the declarative way.
 
 ## Usage
 
-### Create `.github/labels.yml`
+### Create manifest of GitHub labels
 
-```
+```yaml
 - color: d73a4a
   description: Something isn't working
   name: bug
@@ -22,11 +22,12 @@ Action to sync GitHub labels in the declarative way.
   name: duplicate
 ```
 
-To create `.github/labels.yml` for the current status of labels, use [label-exporter](https://github.com/micnncim/label-exporter).
+The default file path is `.github/labels.yml` but you can specify any file path `jobs.<job_id>.steps.with`.  
+To create manifest of GitHub labels for the current status of labels easily, we recommend using [label-exporter](https://github.com/micnncim/label-exporter).
 
 ### Create Workflow
 
-```
+```yaml
 name: Sync labels in the declarative way
 on: [push]
 jobs:
