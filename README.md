@@ -50,6 +50,7 @@ jobs:
 
 - [actions/labeler](https://github.com/actions/labeler)
 - [lannonbr/issue-label-manager-action](https://github.com/lannonbr/issue-label-manager-action)
+- [b4b4r07/github-labeler](https://github.com/b4b4r07/github-labeler)
 
 ## LICENSE
 
