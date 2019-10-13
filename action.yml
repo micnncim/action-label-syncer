@@ -1,0 +1,9 @@
+name: Syncer of GitHub labels
+description: Sync GitHub labels in the declarative way.
+author: micnncim
+runs:
+  using: golang1.13
+  main: cmd/action-labels/main.go
+branding:
+  icon: circle
+  color: blue
