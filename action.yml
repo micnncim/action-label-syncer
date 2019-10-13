@@ -1,0 +1,9 @@
+name: 'Syncer of GitHub labels'
+description: 'Sync GitHub labels in the declarative way.'
+author: 'micnncim'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+branding:
+  icon: circle
+  color: blue
