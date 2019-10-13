@@ -1,8 +1,8 @@
 # Label Syncer
 
 [![CI](https://github.com/micnncim/action-label-syncer/workflows/CI/badge.svg)](https://github.com/micnncim/action-label-syncer/actions)
-[![Release](https://badgen.net/github/release/micnncim/action-label-syncer?icon=github)](https://github.com/micnncim/action-label-syncer/releases)
-[![Marketplace](https://badgen.net/badge/marketplace/action-label-syncer?icon=github)](https://github.com/marketplace/actions/label-syncer)
+[![Release](https://img.shields.io/github/v/release/micnncim/action-label-syncer.svg?logo=github)](https://github.com/micnncim/action-label-syncer/releases)
+[![Marketplace](https://img.shields.io/badge/marketplace-label--syner-blue?logo=github)](https://github.com/marketplace/actions/label-syncer)
 
 Action to sync GitHub labels in the declarative way.  
 By using this action, you can sync current labels with configured labels in a YAML manifest.
@@ -25,7 +25,7 @@ By using this action, you can sync current labels with configured labels in a YA
 
 ![](./docs/assets/screenshot.png)
 
-The default file path is `.github/labels.yml` but you can specify any file path `jobs.<job_id>.steps.with`.  
+The default file path is `.github/labels.yml`, but you can specify any file path with `jobs.<job_id>.steps.with`.  
 To create manifest of GitHub labels for the current status of labels easily, we recommend using [label-exporter](https://github.com/micnncim/label-exporter).
 
 ### Create Workflow
