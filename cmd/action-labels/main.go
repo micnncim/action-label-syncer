@@ -4,17 +4,14 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/micnncim/action-labels/pkg/github"
 )
 
 func main() {
-	workspace := os.Getenv("GITHUB_WORKSPACE")
 	manifest := os.Getenv("INPUT_MANIFEST")
-	path := filepath.Join(workspace, manifest)
-	labels, err := github.FromManifestToLabels(path)
+	labels, err := github.FromManifestToLabels(manifest)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "unable to load manifest: %v\n", err)
 		os.Exit(1)
