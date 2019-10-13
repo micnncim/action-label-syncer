@@ -12,8 +12,8 @@ import (
 
 func main() {
 	workspace := os.Getenv("GITHUB_WORKSPACE")
-	// TODO: Allow to change filepath of manifest.
-	path := filepath.Join(workspace, ".github", "labels.yml")
+	manifest := os.Getenv("INPUT_MANIFEST")
+	path := filepath.Join(workspace, manifest)
 	labels, err := github.FromManifestToLabels(path)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "unable to load manifest: %v\n", err)

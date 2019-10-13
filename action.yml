@@ -1,9 +1,14 @@
 name: 'Syncer of GitHub labels'
 description: 'Sync GitHub labels in the declarative way.'
 author: 'micnncim'
+inputs:
+  manifest:
+    description: 'File path of YAML manifest for labels'
+    required: false
+    default: '.github/labels.yml'
 runs:
   using: 'docker'
   image: 'Dockerfile'
 branding:
   icon: circle
-  color: blue
+  color: black
