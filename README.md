@@ -23,6 +23,8 @@ By using this action, you can sync current labels with configured labels in a YA
   name: duplicate
 ```
 
+![](./docs/assets/screenshot.png)
+
 The default file path is `.github/labels.yml` but you can specify any file path `jobs.<job_id>.steps.with`.  
 To create manifest of GitHub labels for the current status of labels easily, we recommend using [label-exporter](https://github.com/micnncim/label-exporter).
 
