@@ -1,6 +1,8 @@
 # Action Labels
 
 [![CI](https://github.com/micnncim/action-labels/workflows/CI/badge.svg)](https://github.com/micnncim/action-labels/actions)
+[![Release](https://badgen.net/github/release/micnncim/action-labels?icon=github)](https://github.com/micnncim/action-labels/releases)
+[![Marketplace](https://badgen.net/badge/marketplace/action-labels/?icon=github)](https://github.com/marketplace/actions/syncer-of-github-labels)
 
 Action to sync GitHub labels in the declarative way.
 
