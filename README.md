@@ -1,5 +1,7 @@
 # Action Labels
 
+[![CI](https://github.com/micnncim/action-labels/workflows/CI/badge.svg)](https://github.com/micnncim/action-labels/actions)
+
 Action to sync GitHub labels in the declarative way.
 
 ## Usage
