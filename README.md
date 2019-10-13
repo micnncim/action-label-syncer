@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/micnncim/action-label-syncer/workflows/CI/badge.svg)](https://github.com/micnncim/action-label-syncer/actions)
 [![Release](https://img.shields.io/github/v/release/micnncim/action-label-syncer.svg?logo=github)](https://github.com/micnncim/action-label-syncer/releases)
-[![Marketplace](https://img.shields.io/badge/marketplace-label--syner-blue?logo=github)](https://github.com/marketplace/actions/label-syncer)
+[![Marketplace](https://img.shields.io/badge/marketplace-label--syncer-blue?logo=github)](https://github.com/marketplace/actions/label-syncer)
 
 Action to sync GitHub labels in the declarative way.  
 By using this action, you can sync current labels with configured labels in a YAML manifest.
