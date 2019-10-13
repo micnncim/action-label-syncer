@@ -1,8 +1,8 @@
-# Action Labels
+# Label Syncer
 
-[![CI](https://github.com/micnncim/action-labels/workflows/CI/badge.svg)](https://github.com/micnncim/action-labels/actions)
-[![Release](https://badgen.net/github/release/micnncim/action-labels?icon=github)](https://github.com/micnncim/action-labels/releases)
-[![Marketplace](https://badgen.net/badge/marketplace/action-labels/?icon=github)](https://github.com/marketplace/actions/syncer-of-github-labels)
+[![CI](https://github.com/micnncim/action-label-syncer/workflows/CI/badge.svg)](https://github.com/micnncim/action-label-syncer/actions)
+[![Release](https://badgen.net/github/release/micnncim/action-label-syncer?icon=github)](https://github.com/micnncim/action-label-syncer/releases)
+[![Marketplace](https://badgen.net/badge/marketplace/action-label-syncer?icon=github)](https://github.com/marketplace/actions/label-syncer)
 
 Action to sync GitHub labels in the declarative way.
 
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@1.0.0
-      - uses: micnncim/action-labels@latest
+      - uses: micnncim/action-label-syncer@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}

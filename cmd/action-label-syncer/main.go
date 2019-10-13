@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/micnncim/action-labels/pkg/github"
+	"github.com/micnncim/action-label-syncer/pkg/github"
 )
 
 func main() {

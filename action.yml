@@ -1,4 +1,4 @@
-name: 'Syncer of GitHub labels'
+name: 'Label Syncer'
 description: 'Sync GitHub labels in the declarative way.'
 author: 'micnncim'
 inputs:
