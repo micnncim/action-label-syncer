@@ -12,5 +12,7 @@ jobs:
         id: go
       - name: Check out code into the Go module directory
         uses: actions/checkout@v1
+      - name: Download modules
+        run: go get -d -v ./...
       - name: Test
         run: go test ./...
