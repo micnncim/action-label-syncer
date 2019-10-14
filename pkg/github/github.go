@@ -59,6 +59,22 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 
 	eg := errgroup.Group{}
 
+	// Delete labels.
+	for _, currentLabel := range currentLabels {
+		currentLabel := currentLabel
+		eg.Go(func() error {
+			_, ok := labelMap[currentLabel.Name]
+			if ok {
+				return nil
+			}
+			return c.deleteLabel(ctx, owner, repo, currentLabel.Name)
+		})
+	}
+
+	if err := eg.Wait(); err != nil {
+		return err
+	}
+
 	// Create and/or update labels.
 	for _, l := range labels {
 		l := l
@@ -71,18 +87,6 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 				return c.updateLabel(ctx, owner, repo, l)
 			}
 			return nil
-		})
-	}
-
-	// Delete labels.
-	for _, currentLabel := range currentLabels {
-		currentLabel := currentLabel
-		eg.Go(func() error {
-			_, ok := labelMap[currentLabel.Name]
-			if ok {
-				return nil
-			}
-			return c.deleteLabel(ctx, owner, repo, currentLabel.Name)
 		})
 	}
 
