@@ -55,3 +55,7 @@ jobs:
 ## LICENSE
 
 [MIT License](./LICENSE)
+
+## Note
+
+*Icon made by bqlqn from [www.flaticon.com](https://www.flaticon.com)*
