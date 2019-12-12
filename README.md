@@ -4,47 +4,69 @@
 [![Release](https://img.shields.io/github/v/release/micnncim/action-label-syncer.svg?logo=github)](https://github.com/micnncim/action-label-syncer/releases)
 [![Marketplace](https://img.shields.io/badge/marketplace-label--syncer-blue?logo=github)](https://github.com/marketplace/actions/label-syncer)
 
-Action to sync GitHub labels in the declarative way.  
-By using this action, you can sync current labels with labels configured in a YAML manifest.
+GitHub Actions workflow to sync GitHub labels in the declarative way.  
+
+By using this workflow, you can sync current labels with labels configured in a YAML manifest.
 
 ## Usage
 
 ### Create YAML manifest of GitHub labels
 
 ```yaml
-- color: d73a4a
+- name: bug
   description: Something isn't working
-  name: bug
-- color: 0075ca
+  color: d73a4a
+- name: documentation
   description: Improvements or additions to documentation
-  name: documentation
-- color: cfd3d7
+  color: 0075ca
+- name: duplicate
   description: This issue or pull request already exists
-  name: duplicate
+  color: cfd3d7
 ```
 
 ![](./docs/assets/screenshot.png)
 
-The default file path is `.github/labels.yml`, but you can specify any file path with `jobs.<job_id>.steps.with`.  
-To create manifest of the current labels easily, we recommend using [label-exporter](https://github.com/micnncim/label-exporter).
+The default file path is `.github/labels.yml`, but you can specify any file path with `jobs.<job_id>.steps.with`.
+
+To create manifest of the current labels easily, using [label-exporter](https://github.com/micnncim/label-exporter) is recommended.
 
 ### Create Workflow
 
+An workflow example is here.
+
 ```yaml
 name: Sync labels in the declarative way
-on: [push]
-jobs:
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - path/to/labels.yml
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@1.0.0
-      - uses: micnncim/action-label-syncer@latest
+      - uses: micnncim/action-label-syncer@v0.4.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
         with:
-          manifest: labels.yml # default: .github/labels.yml
+          manifest: labels.yml
 ```
+
+## Project using action-label-syncer
+
+- [cloudalchemy/ansible-prometheus](https://github.com/cloudalchemy/ansible-prometheus)
+- [cloudalchemy/ansible-grafana](https://github.com/cloudalchemy/ansible-grafana)
+- [cloudalchemy/ansible-node-exporter](https://github.com/cloudalchemy/ansible-node-exporter)
+- [cloudalchemy/ansible-fluentd](https://github.com/cloudalchemy/ansible-fluentd)
+- [cloudalchemy/ansible-alertmanager](https://github.com/cloudalchemy/ansible-alertmanager)
+- [cloudalchemy/ansible-blackbox-exporter](https://github.com/cloudalchemy/ansible-blackbox-exporter)
+- [cloudalchemy/ansible-pushgateway](https://github.com/cloudalchemy/ansible-pushgateway)
+- [cloudalchemy/ansible-coredns](https://github.com/cloudalchemy/ansible-coredns)
+- [sagebind/isahc](https://github.com/sagebind/isahc)
+- [JulienBreux/baleia](https://github.com/JulienBreux/baleia)
+
+If you're using `action-label-sycner` in your project, please send a PR to list your project!
 
 ## See also
 
