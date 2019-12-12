@@ -53,6 +53,21 @@ on:
           manifest: labels.yml
 ```
 
+## Project using action-label-syncer
+
+- [cloudalchemy/ansible-prometheus](https://github.com/cloudalchemy/ansible-prometheus)
+- [cloudalchemy/ansible-grafana](https://github.com/cloudalchemy/ansible-grafana)
+- [cloudalchemy/ansible-node-exporter](https://github.com/cloudalchemy/ansible-node-exporter)
+- [cloudalchemy/ansible-fluentd](https://github.com/cloudalchemy/ansible-fluentd)
+- [cloudalchemy/ansible-alertmanager](https://github.com/cloudalchemy/ansible-alertmanager)
+- [cloudalchemy/ansible-blackbox-exporter](https://github.com/cloudalchemy/ansible-blackbox-exporter)
+- [cloudalchemy/ansible-pushgateway](https://github.com/cloudalchemy/ansible-pushgateway)
+- [cloudalchemy/ansible-coredns](https://github.com/cloudalchemy/ansible-coredns)
+- [sagebind/isahc](https://github.com/sagebind/isahc)
+- [JulienBreux/baleia](https://github.com/JulienBreux/baleia)
+
+If you're using `action-label-sycner` in your project, please send a PR to list your project!
+
 ## See also
 
 - [actions/labeler](https://github.com/actions/labeler)
