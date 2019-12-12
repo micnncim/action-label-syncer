@@ -50,7 +50,7 @@ on:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          manifest: labels.yml # optional; default path is `.github/labels.yml`
+          manifest: labels.yml
 ```
 
 ## See also
