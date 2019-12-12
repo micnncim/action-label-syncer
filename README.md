@@ -24,7 +24,7 @@ By using this workflow, you can sync current labels with labels configured in a 
   color: cfd3d7
 ```
 
-![](./docs/assets/screenshot.png)
+![](docs/assets/screenshot.png)
 
 The default file path is `.github/labels.yml`, but you can specify any file path with `jobs.<job_id>.steps.with`.
 
