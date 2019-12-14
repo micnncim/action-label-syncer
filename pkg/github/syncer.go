@@ -11,6 +11,12 @@ type LabelSyncer struct {
 	client Client
 }
 
+func NewLabelSyncer(client Client) *LabelSyncer {
+	return &LabelSyncer{
+		client: client,
+	}
+}
+
 // SyncLabels syncs the current GitHub labels with labels in the manifest.
 func (s *LabelSyncer) SyncLabels(ctx context.Context, owner, repo string, labels []Label) error {
 	labelMap := make(map[string]Label)

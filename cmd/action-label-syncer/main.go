@@ -18,7 +18,7 @@ func main() {
 	}
 
 	token := os.Getenv("GITHUB_TOKEN")
-	client := github.NewClient(token)
+	cli := github.NewClient(token)
 
 	repository := os.Getenv("GITHUB_REPOSITORY")
 	slugs := strings.Split(repository, "/")
@@ -29,7 +29,8 @@ func main() {
 	owner, repo := slugs[0], slugs[1]
 
 	ctx := context.Background()
-	if err := client.SyncLabels(ctx, owner, repo, labels); err != nil {
+	s := github.NewLabelSyncer(cli)
+	if err := s.SyncLabels(ctx, owner, repo, labels); err != nil {
 		fmt.Fprintf(os.Stderr, "unable to sync labels: %v\n", err)
 		os.Exit(1)
 	}
