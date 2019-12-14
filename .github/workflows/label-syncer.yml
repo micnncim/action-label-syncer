@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - '.github/labels.yml'
+    branches:
+      - master
 jobs:
   build:
     name: Sync labels
