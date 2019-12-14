@@ -5,7 +5,7 @@
 [![Marketplace](https://img.shields.io/badge/marketplace-label--syncer-blue?logo=github)](https://github.com/marketplace/actions/label-syncer)
 [![Dependabot](https://badgen.net/badge/icon/Dependabot?icon=dependabot&label&color=blue)](https://dependabot.com)
 
-GitHub Actions workflow to sync GitHub labels in the declarative way.  
+GitHub Actions workflow to sync GitHub labels as [GitOps](https://www.weave.works/technologies/gitops).  
 
 By using this workflow, you can sync current labels with labels configured in a YAML manifest.
 
@@ -36,7 +36,7 @@ To create manifest of the current labels easily, using [label-exporter](https://
 An workflow example is here.
 
 ```yaml
-name: Sync labels in the declarative way
+name: Sync labels
 on:
   push:
     branches:
@@ -67,10 +67,11 @@ on:
 - [sagebind/isahc](https://github.com/sagebind/isahc)
 - [JulienBreux/baleia](https://github.com/JulienBreux/baleia)
 
-If you're using `action-label-sycner` in your project, please send a PR to list your project!
+If you're using `action-label-syncer` in your project, please send a PR to list your project!
 
 ## See also
 
+- [Prow](https://github.com/kubernetes/test-infra/tree/master/prow)
 - [actions/labeler](https://github.com/actions/labeler)
 - [lannonbr/issue-label-manager-action](https://github.com/lannonbr/issue-label-manager-action)
 - [b4b4r07/github-labeler](https://github.com/b4b4r07/github-labeler)
