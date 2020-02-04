@@ -1,4 +1,5 @@
 ![logo](docs/assets/logo.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmicnncim%2Faction-label-syncer.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmicnncim%2Faction-label-syncer?ref=badge_shield)
 
 [![CI](https://github.com/micnncim/action-label-syncer/workflows/CI/badge.svg)](https://github.com/micnncim/action-label-syncer/actions)
 [![Release](https://img.shields.io/github/v/release/micnncim/action-label-syncer.svg?logo=github)](https://github.com/micnncim/action-label-syncer/releases)
@@ -79,6 +80,9 @@ If you're using `action-label-syncer` in your project, please send a PR to list 
 ## LICENSE
 
 [MIT License](./LICENSE)
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmicnncim%2Faction-label-syncer.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmicnncim%2Faction-label-syncer?ref=badge_large)
 
 ## Note
 
