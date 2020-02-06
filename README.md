@@ -96,7 +96,7 @@ If you're using `action-label-syncer` in your project, please send a PR to list 
 [license]: LICENSE
 
 [actions-workflow-test-badge]: https://img.shields.io/github/workflow/status/micnncim/action-label-syncer/CI?label=CI&style=for-the-badge&logo=github
-[actions-marketplace-badge]: https://img.shields.io/badge/marketplace-label--syner-blue?style=for-the-badge&logo=github
+[actions-marketplace-badge]: https://img.shields.io/badge/marketplace-label%20syncer-blue?style=for-the-badge&logo=github
 [go-version-badge]: https://img.shields.io/github/go-mod/go-version/micnncim/action-label-syncer?logo=go&style=for-the-badge
 [pkg.go.dev-badge]: https://img.shields.io/badge/pkg.go.dev-reference-blue?style=for-the-badge&logo=go
 [dependabot-badge]: https://img.shields.io/badge/-dependabot-blue?style=for-the-badge&logo=dependabot
