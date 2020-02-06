@@ -1,9 +1,11 @@
 ![logo](docs/assets/logo.png)
 
-[![CI](https://github.com/micnncim/action-label-syncer/workflows/CI/badge.svg)](https://github.com/micnncim/action-label-syncer/actions)
-[![Release](https://img.shields.io/github/v/release/micnncim/action-label-syncer.svg?logo=github)](https://github.com/micnncim/action-label-syncer/releases)
-[![Marketplace](https://img.shields.io/badge/marketplace-label--syncer-blue?logo=github)](https://github.com/marketplace/actions/label-syncer)
-[![Dependabot](https://badgen.net/badge/icon/Dependabot?icon=dependabot&label&color=blue)](https://dependabot.com)
+[![actions-workflow-test][actions-workflow-test-badge]][actions-workflow-test]
+[![actions-marketplace][actions-marketplace-badge]][actions-marketplace]
+[![go-version][go-version-badge]][go-version]
+[![pkg.go.dev][pkg.go.dev-badge]][pkg.go.dev]
+[![dependabot][dependabot-badge]][dependabot]
+[![license][license-badge]][license]
 
 GitHub Actions workflow to sync GitHub labels as [GitOps](https://www.weave.works/technologies/gitops).  
 
@@ -83,3 +85,19 @@ If you're using `action-label-syncer` in your project, please send a PR to list 
 ## Note
 
 *Icon made by bqlqn from [www.flaticon.com](https://www.flaticon.com)*
+
+<!-- badge links -->
+
+[actions-workflow-test]: https://github.com/micnncim/action-label-syncer/actions?query=workflow%3ACI
+[actions-marketplace]: https://github.com/marketplace/actions/label-syncer
+[go-version]: go.mod
+[pkg.go.dev]: https://pkg.go.dev/github.com/micnncim/action-label-syncer
+[dependabot]: https://dependabot.com
+[license]: LICENSE
+
+[actions-workflow-test-badge]: https://img.shields.io/github/workflow/status/micnncim/action-label-syncer/CI?label=CI&style=for-the-badge&logo=github
+[actions-marketplace-badge]: https://img.shields.io/badge/marketplace-label--syner-blue?style=for-the-badge&logo=github
+[go-version-badge]: https://img.shields.io/github/go-mod/go-version/micnncim/action-label-syncer?logo=go&style=for-the-badge
+[pkg.go.dev-badge]: https://img.shields.io/badge/pkg.go.dev-reference-blue?style=for-the-badge&logo=go
+[dependabot-badge]: https://img.shields.io/badge/-dependabot-blue?style=for-the-badge&logo=dependabot
+[license-badge]: https://img.shields.io/github/license/micnncim/action-label-syncer?style=for-the-badge
