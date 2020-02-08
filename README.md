@@ -2,12 +2,13 @@
 
 [![actions-workflow-test][actions-workflow-test-badge]][actions-workflow-test]
 [![actions-marketplace][actions-marketplace-badge]][actions-marketplace]
+[![release][release-badge]][release]
 [![go-version][go-version-badge]][go-version]
 [![pkg.go.dev][pkg.go.dev-badge]][pkg.go.dev]
 [![dependabot][dependabot-badge]][dependabot]
 [![license][license-badge]][license]
 
-GitHub Actions workflow to sync GitHub labels as [GitOps](https://www.weave.works/technologies/gitops).  
+GitHub Actions workflow to sync GitHub labels in the declarative way.
 
 By using this workflow, you can sync current labels with labels configured in a YAML manifest.
 
@@ -48,8 +49,7 @@ on:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@1.0.0
-      - uses: micnncim/action-label-syncer@v0.4.0
+      - uses: micnncim/action-label-syncer@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -78,10 +78,6 @@ If you're using `action-label-syncer` in your project, please send a PR to list 
 - [lannonbr/issue-label-manager-action](https://github.com/lannonbr/issue-label-manager-action)
 - [b4b4r07/github-labeler](https://github.com/b4b4r07/github-labeler)
 
-## LICENSE
-
-[MIT License](./LICENSE)
-
 ## Note
 
 *Icon made by bqlqn from [www.flaticon.com](https://www.flaticon.com)*
@@ -90,14 +86,16 @@ If you're using `action-label-syncer` in your project, please send a PR to list 
 
 [actions-workflow-test]: https://github.com/micnncim/action-label-syncer/actions?query=workflow%3ACI
 [actions-marketplace]: https://github.com/marketplace/actions/label-syncer
+[release]: https://github.com/micnncim/action-label-syncer/releases
 [go-version]: go.mod
 [pkg.go.dev]: https://pkg.go.dev/github.com/micnncim/action-label-syncer
-[dependabot]: https://dependabot.com
+[dependabot]: https://github.com/micnncim/action-label-syncer/pulls?q=is:pr%20author:app/dependabot-preview
 [license]: LICENSE
 
 [actions-workflow-test-badge]: https://img.shields.io/github/workflow/status/micnncim/action-label-syncer/CI?label=CI&style=for-the-badge&logo=github
 [actions-marketplace-badge]: https://img.shields.io/badge/marketplace-label%20syncer-blue?style=for-the-badge&logo=github
+[release-badge]: https://img.shields.io/github/v/release/micnncim/action-label-syncer?style=for-the-badge&logo=github
 [go-version-badge]: https://img.shields.io/github/go-mod/go-version/micnncim/action-label-syncer?logo=go&style=for-the-badge
 [pkg.go.dev-badge]: https://img.shields.io/badge/pkg.go.dev-reference-blue?style=for-the-badge&logo=go
-[dependabot-badge]: https://img.shields.io/badge/-dependabot-blue?style=for-the-badge&logo=dependabot
+[dependabot-badge]: https://img.shields.io/badge/dependabot-enabled-blue?style=for-the-badge&logo=dependabot
 [license-badge]: https://img.shields.io/github/license/micnncim/action-label-syncer?style=for-the-badge
