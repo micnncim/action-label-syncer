@@ -36,7 +36,7 @@ To create manifest of the current labels easily, using [label-exporter](https://
 
 ### Create Workflow
 
-An workflow example is here.
+An example workflow is here.
 
 ```yaml
 name: Sync labels
@@ -46,6 +46,7 @@ on:
       - master
     paths:
       - path/to/labels.yml
+jobs:
   build:
     runs-on: ubuntu-latest
     steps:
