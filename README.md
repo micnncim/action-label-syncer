@@ -45,7 +45,7 @@ on:
     branches:
       - master
     paths:
-      - path/to/labels.yml
+      - path/to/manifest/labels.yml
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -55,7 +55,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          manifest: labels.yml
+          manifest: path/to/manifest/labels.yml
 ```
 
 ## Project using action-label-syncer
