@@ -17,6 +17,7 @@ package github
 import (
 	"context"
 	"io/ioutil"
+	"strings"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -42,6 +43,9 @@ func FromManifestToLabels(path string) ([]Label, error) {
 	}
 	var labels []Label
 	err = yaml.Unmarshal(buf, &labels)
+	for _, l := range labels {
+		l.NormalizeColor()
+	}
 	return labels, err
 }
 
@@ -155,4 +159,8 @@ func (c *Client) updateLabel(ctx context.Context, owner, repo string, label Labe
 func (c *Client) deleteLabel(ctx context.Context, owner, repo, name string) error {
 	_, err := c.githubClient.Issues.DeleteLabel(ctx, owner, repo, name)
 	return err
+}
+
+func (l *Label) NormalizeColor() {
+	l.Color = strings.TrimPrefix(l.Color, "#")
 }
