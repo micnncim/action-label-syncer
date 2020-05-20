@@ -31,10 +31,16 @@ func main() {
 		os.Exit(1)
 	}
 
-	token := os.Getenv("GITHUB_TOKEN")
+	token := os.Getenv("INPUT_TOKEN")
+	if len(token) == 0 {
+		token = os.Getenv("GITHUB_TOKEN")
+	}
 	client := github.NewClient(token)
 
-	repository := os.Getenv("GITHUB_REPOSITORY")
+	repository := os.Getenv("INPUT_REPOSITORY")
+	if len(repository) == 0 {
+		repository = os.Getenv("GITHUB_REPOSITORY")
+	}
 	slugs := strings.Split(repository, "/")
 	if len(slugs) != 2 {
 		fmt.Fprintf(os.Stderr, "invalid repository: %v\n", repository)
