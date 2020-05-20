@@ -61,7 +61,7 @@ jobs:
 
 It is also possible to specify a repository as an input to the action. This is useful if you want to store your labels somewhere centrally and modify multiple repository labels.
 
-\*\*Note: The default `GITHUB_TOKEN` will not have permissions to operate on other repositories so you must specify a personal access token in your secrets.
+**Note: The default `GITHUB_TOKEN` will not have permissions to operate on other repositories so you must specify a personal access token in your secrets.**
 
 ```yaml
 name: Sync labels
