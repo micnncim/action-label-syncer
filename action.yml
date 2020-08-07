@@ -1,14 +1,20 @@
-name: 'Label Syncer'
-description: 'Sync GitHub labels in the declarative way.'
-author: 'micnncim'
+name: "Label Syncer"
+description: "Sync GitHub labels in the declarative way."
+author: "micnncim"
 inputs:
   manifest:
-    description: 'File path of YAML manifest for labels'
+    description: "File path of YAML manifest for labels"
     required: false
-    default: '.github/labels.yml'
+    default: ".github/labels.yml"
+  repository:
+    description: "The repo to sync labels on (defaults to current repo)"
+    required: false
+  token:
+    description: "An alternative GitHub token to use instead"
+    required: false
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
+  using: "docker"
+  image: "Dockerfile"
 branding:
   icon: circle
   color: black
