@@ -57,6 +57,8 @@ jobs:
           manifest: path/to/manifest/labels.yml
 ```
 
+If a label color changes, the same label is updated with the new color. If a label name changes, the previous label is deleted. All issues and PRs that were previously labeled with this label are now unlabeled.
+
 ## Sync labels on another repository
 
 It is also possible to specify a repository as an input to the action. This is useful if you want to store your labels somewhere centrally and modify multiple repository labels.
