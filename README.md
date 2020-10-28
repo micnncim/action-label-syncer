@@ -29,7 +29,7 @@ By using this workflow, you can sync current labels with labels configured in a 
 
 ![](docs/assets/screenshot.png)
 
-The default file path is `.github/labels.yml`, but you can specify any file path with `jobs.<job_id>.steps.with`.
+The default file path is `.github/labels.yml`, but you can specify any file path with `jobs.<job_id>.steps.with.manifest`.
 
 To create manifest of the current labels easily, using [label-exporter](https://github.com/micnncim/label-exporter) is recommended.
 
@@ -57,7 +57,11 @@ jobs:
           manifest: path/to/manifest/labels.yml
 ```
 
-If a label color changes, the same label is updated with the new color. If a label name changes, the previous label is deleted. All issues and PRs that were previously labeled with this label are now unlabeled.
+If a label color changes, the same label is updated with the new color. If a label name changes, the previous label is deleted by default.
+Also all existing labels which not listed in `manifest` will be deleted by default.
+All issues and PRs that were previously labeled with this label are now unlabeled.
+
+You can add `jobs.<job_id>.steps.with.prune: false` in order to preserver all existing labels which is not mentioned in `manifest`, in this case when a label will be renamed old label will be not deleted.
 
 ## Sync labels on another repository
 
