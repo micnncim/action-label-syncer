@@ -12,6 +12,10 @@ inputs:
   token:
     description: "An alternative GitHub token to use instead"
     required: false
+  prune:
+    description: "Remove unmanaged labels from repository"
+    required: false
+    default: true
 runs:
   using: "docker"
   image: "Dockerfile"

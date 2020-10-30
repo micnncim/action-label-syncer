@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/micnncim/action-label-syncer/pkg/github"
@@ -48,8 +49,14 @@ func main() {
 	}
 	owner, repo := slugs[0], slugs[1]
 
+	prune, err := strconv.ParseBool(os.Getenv("INPUT_PRUNE"))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "unable to parse prune: %v\n", err)
+		os.Exit(1)
+	}
+
 	ctx := context.Background()
-	if err := client.SyncLabels(ctx, owner, repo, labels); err != nil {
+	if err := client.SyncLabels(ctx, owner, repo, labels, prune); err != nil {
 		fmt.Fprintf(os.Stderr, "unable to sync labels: %v\n", err)
 		os.Exit(1)
 	}
