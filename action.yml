@@ -13,7 +13,7 @@ inputs:
     description: "An alternative GitHub token to use instead"
     required: false
   prune:
-    description: "remove unmanaged labels from repository"
+    description: "Remove unmanaged labels from repository"
     required: false
     default: true
 runs:
