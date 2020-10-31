@@ -101,6 +101,7 @@ jobs:
 - [cloudalchemy/ansible-coredns](https://github.com/cloudalchemy/ansible-coredns)
 - [sagebind/isahc](https://github.com/sagebind/isahc)
 - [JulienBreux/baleia](https://github.com/JulienBreux/baleia)
+- [Simplify4U](https://github.com/s4u)
 
 If you're using `action-label-syncer` in your project, please send a PR to list your project!
 
