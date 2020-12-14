@@ -57,7 +57,7 @@ jobs:
           manifest: path/to/manifest/labels.yml
 ```
 
-If a label color changes, the same label is updated with the new color. If a label name changes, the previous label is deleted by default.
+If a label color or description changes, the same label is updated with the new color or description. If a label name changes, the previous label is deleted by default.
 Also all existing labels which not listed in `manifest` will be deleted by default.
 All issues and PRs that were previously labeled with this label are now unlabeled.
 
