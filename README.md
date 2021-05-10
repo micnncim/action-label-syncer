@@ -102,6 +102,7 @@ jobs:
 - [sagebind/isahc](https://github.com/sagebind/isahc)
 - [JulienBreux/baleia](https://github.com/JulienBreux/baleia)
 - [Simplify4U](https://github.com/s4u)
+- [Poeschl's Home Assistant Addons](https://github.com/Poeschl/Hassio-Addons)
 - [The Guild - Master Labels](https://github.com/the-guild-org/shared-resources)
 - [The Guild - GraphQL Codegen](https://github.com/dotansimha/graphql-code-generator)
 - [The Guild - GraphQL ESLint](https://github.com/dotansimha/graphql-eslint)
@@ -115,7 +116,6 @@ jobs:
 - [The Guild - Whatsapp Clone](https://github.com/Urigo/WhatsApp-Clone-Tutorial)
 - [The Guild - GraphQL CLI](https://github.com/Urigo/graphql-cli)
 - [The Guild - SOFA](https://github.com/Urigo/SOFA)
-
 
 If you're using `action-label-syncer` in your project, please send a PR to list your project!
 
