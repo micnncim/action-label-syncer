@@ -102,6 +102,7 @@ jobs:
 - [sagebind/isahc](https://github.com/sagebind/isahc)
 - [JulienBreux/baleia](https://github.com/JulienBreux/baleia)
 - [Simplify4U](https://github.com/s4u)
+- [Poeschl's Home Assistant Addons](https://github.com/Poeschl/Hassio-Addons)
 
 If you're using `action-label-syncer` in your project, please send a PR to list your project!
 
