@@ -86,14 +86,8 @@ jobs:
         with:
           manifest: path/to/manifest/labels.yml
           repository: |
-              asurion-private/pse-action-hello-world
-              asurion-private/pse-ssm-config-surveyor
-              asurion-private/pse-github-actions
-              asurion-private/pse-project-management
-              asurion-private/pse-yoda
-              asurion-private/pse-surveyor-api
-              asurion-private/pse-sbx-deploy-surveyor
-              asurion-private/pse-chart-poc
+              myorg/myrepo1
+              myorg/myrepo2
           token: ${{ secrets.PERSONAL_TOKEN }}
 ```
 

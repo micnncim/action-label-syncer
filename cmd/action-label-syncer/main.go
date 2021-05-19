@@ -50,6 +50,7 @@ func main() {
 		repoinput = os.Getenv("GITHUB_REPOSITORY")
 	}
 	repolist := strings.Fields(repoinput)
+	//repolist := strings.Split(repoinput, ` `)
 	for _, repoitem := range repolist {
 		slugs := strings.Split(repoitem, "/")
 		if len(slugs) != 2 {
