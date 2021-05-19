@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: davidxjohnson/action-label-syncer@v1
+      - uses: micnncim/action-label-syncer@v1
         with:
           manifest: path/to/manifest/labels.yml
           repository: |

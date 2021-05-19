@@ -49,8 +49,8 @@ func main() {
 	if len(repoinput) == 0 {
 		repoinput = os.Getenv("GITHUB_REPOSITORY")
 	}
-	repolist := strings.Fields(repoinput)
-	//repolist := strings.Split(repoinput, ` `)
+
+	repolist := strings.Fields(repoinput) // splits repo input based on whitespace
 	for _, repoitem := range repolist {
 		slugs := strings.Split(repoitem, "/")
 		if len(slugs) != 2 {
@@ -58,8 +58,8 @@ func main() {
 			os.Exit(1)
 		}
 		owner, repo := slugs[0], slugs[1]
-
 		ctx := context.Background()
+
 		if err := client.SyncLabels(ctx, owner, repo, labels, prune); err != nil {
 			fmt.Fprintf(os.Stderr, "unable to sync labels: %v\n", err)
 			os.Exit(1)
