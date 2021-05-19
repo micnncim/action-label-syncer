@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+
 	"strconv"
 	"strings"
 
@@ -38,26 +39,29 @@ func main() {
 	}
 	client := github.NewClient(token)
 
-	repository := os.Getenv("INPUT_REPOSITORY")
-	if len(repository) == 0 {
-		repository = os.Getenv("GITHUB_REPOSITORY")
-	}
-	slugs := strings.Split(repository, "/")
-	if len(slugs) != 2 {
-		fmt.Fprintf(os.Stderr, "invalid repository: %v\n", repository)
-		os.Exit(1)
-	}
-	owner, repo := slugs[0], slugs[1]
-
 	prune, err := strconv.ParseBool(os.Getenv("INPUT_PRUNE"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "unable to parse prune: %v\n", err)
 		os.Exit(1)
 	}
 
-	ctx := context.Background()
-	if err := client.SyncLabels(ctx, owner, repo, labels, prune); err != nil {
-		fmt.Fprintf(os.Stderr, "unable to sync labels: %v\n", err)
-		os.Exit(1)
+	repoinput := os.Getenv("INPUT_REPOSITORY")
+	if len(repoinput) == 0 {
+		repoinput = os.Getenv("GITHUB_REPOSITORY")
+	}
+	repolist := strings.Fields(repoinput)
+	for _, repoitem := range repolist {
+		slugs := strings.Split(repoitem, "/")
+		if len(slugs) != 2 {
+			fmt.Fprintf(os.Stderr, "invalid repository: %v\n", repoitem)
+			os.Exit(1)
+		}
+		owner, repo := slugs[0], slugs[1]
+
+		ctx := context.Background()
+		if err := client.SyncLabels(ctx, owner, repo, labels, prune); err != nil {
+			fmt.Fprintf(os.Stderr, "unable to sync labels: %v\n", err)
+			os.Exit(1)
+		}
 	}
 }

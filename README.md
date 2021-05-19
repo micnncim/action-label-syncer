@@ -82,10 +82,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: micnncim/action-label-syncer@v1
+      - uses: davidxjohnson/action-label-syncer@v1
         with:
           manifest: path/to/manifest/labels.yml
-          repository: myother/repository
+          repository: |
+              asurion-private/pse-action-hello-world
+              asurion-private/pse-ssm-config-surveyor
+              asurion-private/pse-github-actions
+              asurion-private/pse-project-management
+              asurion-private/pse-yoda
+              asurion-private/pse-surveyor-api
+              asurion-private/pse-sbx-deploy-surveyor
+              asurion-private/pse-chart-poc
           token: ${{ secrets.PERSONAL_TOKEN }}
 ```
 
