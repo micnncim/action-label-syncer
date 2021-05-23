@@ -65,7 +65,7 @@ You can add `jobs.<job_id>.steps.with.prune: false` in order to preserver all ex
 
 ## Sync labels on another repository
 
-It is also possible to specify a repository as an input to the action. This is useful if you want to store your labels somewhere centrally and modify multiple repository labels.
+It is also possible to specify a repository or repositories as an input to the action. This is useful if you want to store your labels somewhere centrally and modify multiple repository labels.
 
 **Note: The default `GITHUB_TOKEN` will not have permissions to operate on other repositories so you must specify a personal access token in your secrets.**
 
@@ -85,7 +85,9 @@ jobs:
       - uses: micnncim/action-label-syncer@v1
         with:
           manifest: path/to/manifest/labels.yml
-          repository: myother/repository
+          repository: |
+              owner/repository-1
+              owner/repository-2
           token: ${{ secrets.PERSONAL_TOKEN }}
 ```
 
