@@ -32,6 +32,7 @@ type Client struct {
 
 type Label struct {
 	Name        string `yaml:"name"`
+	Alias       string `yaml:"alias"`
 	Description string `yaml:"description"`
 	Color       string `yaml:"color"`
 }
@@ -59,8 +60,12 @@ func NewClient(token string) *Client {
 
 func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []Label, prune bool) error {
 	labelMap := make(map[string]Label)
+	aliasMap := make(map[string]Label)
 	for _, l := range labels {
 		labelMap[l.Name] = l
+		if l.Alias != "" {
+			aliasMap[l.Alias] = l
+		}
 	}
 
 	currentLabels, err := c.getLabels(ctx, owner, repo)
@@ -79,8 +84,9 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 		for _, currentLabel := range currentLabels {
 			currentLabel := currentLabel
 			eg.Go(func() error {
-				_, ok := labelMap[currentLabel.Name]
-				if ok {
+				_, name_ok := labelMap[currentLabel.Name]
+				_, alias_ok := aliasMap[currentLabel.Name]
+				if (alias_ok && !name_ok) || name_ok {
 					return nil
 				}
 				return c.deleteLabel(ctx, owner, repo, currentLabel.Name)
@@ -96,12 +102,17 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 	for _, l := range labels {
 		l := l
 		eg.Go(func() error {
+			labelName := l.Name
 			currentLabel, ok := currentLabelMap[l.Name]
 			if !ok {
-				return c.createLabel(ctx, owner, repo, l)
+				currentLabel, ok = currentLabelMap[l.Alias]
+				if !ok {
+					return c.createLabel(ctx, owner, repo, l)
+				}
+				labelName = l.Alias
 			}
-			if currentLabel.Description != l.Description || currentLabel.Color != l.Color {
-				return c.updateLabel(ctx, owner, repo, l)
+			if currentLabel.Description != l.Description || currentLabel.Color != l.Color || currentLabel.Name != l.Name {
+				return c.updateLabel(ctx, owner, repo, labelName, l)
 			}
 			fmt.Printf("label: %+v not changed on %s/%s\n", l, owner, repo)
 			return nil
@@ -147,13 +158,13 @@ func (c *Client) getLabels(ctx context.Context, owner, repo string) ([]Label, er
 	return labels, nil
 }
 
-func (c *Client) updateLabel(ctx context.Context, owner, repo string, label Label) error {
+func (c *Client) updateLabel(ctx context.Context, owner, repo, labelName string, label Label) error {
 	l := &github.Label{
 		Name:        &label.Name,
 		Description: &label.Description,
 		Color:       &label.Color,
 	}
-	_, _, err := c.githubClient.Issues.EditLabel(ctx, owner, repo, label.Name, l)
+	_, _, err := c.githubClient.Issues.EditLabel(ctx, owner, repo, labelName, l)
 	fmt.Printf("label %+v updated on: %s/%s\n", label, owner, repo)
 	return err
 }

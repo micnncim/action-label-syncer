@@ -33,6 +33,25 @@ The default file path is `.github/labels.yml`, but you can specify any file path
 
 To create manifest of the current labels easily, using [label-exporter](https://github.com/micnncim/label-exporter) is recommended.
 
+### Renaming labels
+
+If you want to rename a label, you can set an `alias` in the manifest.
+For example, if you want to rename the label `bug` to `Type: bug`, you
+would use a manifest like this:
+
+```yaml
+- name: Type: bug
+  alias: bug
+  description: Something isn't working
+  color: d73a4a
+```
+
+Renaming labels makes it easier to adopt a new taxonomy if you have
+issues and pull requests using the old label names. Since you're
+renaming labels rather than deleting and creating new ones, existing
+pull requests and issues will keep their labels, but will adopt the
+new name.
+
 ### Create Workflow
 
 An example workflow is here.
