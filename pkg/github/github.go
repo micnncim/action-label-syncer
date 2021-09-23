@@ -57,6 +57,9 @@ func FromManifestToLabels(path string) ([]Label, error) {
 	var flatLabels []Label
 	for _, l := range labels {
 		if l.Import == "" {
+			if len(l.Description) > 100 {
+				return nil, fmt.Errorf("Description of \"%s\" exceeds 100 characters", l.Name)
+			}
 			flatLabels = append(flatLabels, l)
 		} else {
 			var importPath string
