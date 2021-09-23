@@ -85,7 +85,11 @@ func NewClient(token string) *Client {
 	}
 }
 
-func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []Label, prune bool) error {
+func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []Label, prune bool, dryRun bool) error {
+	if dryRun {
+		fmt.Printf("Dry run!  No actual changes will be made.\n")
+	}
+
 	labelMap := make(map[string]Label)
 	aliasMap := make(map[string]Label)
 	for _, l := range labels {
@@ -119,7 +123,7 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 				if (alias_ok && !name_ok) || name_ok {
 					return nil
 				}
-				return c.deleteLabel(ctx, owner, repo, currentLabel.Name)
+				return c.deleteLabel(ctx, owner, repo, currentLabel.Name, dryRun)
 			})
 		}
 
@@ -137,12 +141,12 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 			if !ok {
 				currentLabel, ok = currentLabelMap[l.Alias]
 				if !ok {
-					return c.createLabel(ctx, owner, repo, l)
+					return c.createLabel(ctx, owner, repo, l, dryRun)
 				}
 				labelName = l.Alias
 			}
 			if currentLabel.Description != l.Description || currentLabel.Color != l.Color || currentLabel.Name != l.Name {
-				return c.updateLabel(ctx, owner, repo, labelName, l)
+				return c.updateLabel(ctx, owner, repo, labelName, l, dryRun)
 			}
 			// fmt.Printf("label: %+v not changed on %s/%s\n", l, owner, repo)
 			return nil
@@ -152,14 +156,17 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 	return eg.Wait()
 }
 
-func (c *Client) createLabel(ctx context.Context, owner, repo string, label Label) error {
+func (c *Client) createLabel(ctx context.Context, owner, repo string, label Label, dryRun bool) error {
 	l := &github.Label{
 		Name:        &label.Name,
 		Description: &label.Description,
 		Color:       &label.Color,
 	}
-	_, _, err := c.githubClient.Issues.CreateLabel(ctx, owner, repo, l)
 	fmt.Printf("label: %+v created on: %s/%s\n", label, owner, repo)
+	if dryRun {
+		return nil
+	}
+	_, _, err := c.githubClient.Issues.CreateLabel(ctx, owner, repo, l)
 	return err
 }
 
@@ -188,19 +195,25 @@ func (c *Client) getLabels(ctx context.Context, owner, repo string) ([]Label, er
 	return labels, nil
 }
 
-func (c *Client) updateLabel(ctx context.Context, owner, repo, labelName string, label Label) error {
+func (c *Client) updateLabel(ctx context.Context, owner, repo, labelName string, label Label, dryRun bool) error {
 	l := &github.Label{
 		Name:        &label.Name,
 		Description: &label.Description,
 		Color:       &label.Color,
 	}
-	_, _, err := c.githubClient.Issues.EditLabel(ctx, owner, repo, labelName, l)
 	fmt.Printf("label %+v updated on: %s/%s\n", label, owner, repo)
+	if dryRun {
+		return nil
+	}
+	_, _, err := c.githubClient.Issues.EditLabel(ctx, owner, repo, labelName, l)
 	return err
 }
 
-func (c *Client) deleteLabel(ctx context.Context, owner, repo, name string) error {
-	_, err := c.githubClient.Issues.DeleteLabel(ctx, owner, repo, name)
+func (c *Client) deleteLabel(ctx context.Context, owner, repo, name string, dryRun bool) error {
 	fmt.Printf("label: %s deleted from: %s/%s\n", name, owner, repo)
+	if dryRun {
+		return nil
+	}
+	_, err := c.githubClient.Issues.DeleteLabel(ctx, owner, repo, name)
 	return err
 }
