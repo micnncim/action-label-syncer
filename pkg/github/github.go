@@ -62,10 +62,8 @@ func FromManifestToLabels(path string) ([]Label, error) {
 			}
 			flatLabels = append(flatLabels, l)
 		} else {
-			var importPath string
-			importPath = filepath.Join(filepath.Dir(path), l.Import)
-			var importedLabels []Label
-			importedLabels, err = FromManifestToLabels(importPath)
+			importPath := filepath.Join(filepath.Dir(path), l.Import)
+			importedLabels, err := FromManifestToLabels(importPath)
 			if err != nil {
 				return nil, err
 			}
