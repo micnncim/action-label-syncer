@@ -33,6 +33,7 @@ type Client struct {
 type Label struct {
 	Name        string `yaml:"name"`
 	Alias       string `yaml:"alias"`
+	Aliases   []string `yaml:"aliases"`
 	Description string `yaml:"description"`
 	Color       string `yaml:"color"`
 }
@@ -65,6 +66,9 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 		labelMap[l.Name] = l
 		if l.Alias != "" {
 			aliasMap[l.Alias] = l
+		}
+		for _, alias := range l.Aliases {
+			aliasMap[alias] = l
 		}
 	}
 
