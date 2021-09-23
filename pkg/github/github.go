@@ -53,15 +53,19 @@ func FromManifestToLabels(path string) ([]Label, error) {
 		return nil, err
 	}
 
-	// Handle imports of labels from another file
 	var flatLabels []Label
 	for _, l := range labels {
 		if l.Import == "" {
+			// Data checks and normalization.
 			if len(l.Description) > 100 {
 				return nil, fmt.Errorf("Description of \"%s\" exceeds 100 characters", l.Name)
 			}
+			if l.Alias != "" {
+				l.Aliases = append(l.Aliases, l.Alias)
+			}
 			flatLabels = append(flatLabels, l)
 		} else {
+			// Handle imports of labels from another file
 			importPath := filepath.Join(filepath.Dir(path), l.Import)
 			importedLabels, err := FromManifestToLabels(importPath)
 			if err != nil {
@@ -94,9 +98,6 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 	aliasMap := make(map[string]Label)
 	for _, l := range labels {
 		labelMap[l.Name] = l
-		if l.Alias != "" {
-			aliasMap[l.Alias] = l
-		}
 		for _, alias := range l.Aliases {
 			aliasMap[alias] = l
 		}
@@ -120,7 +121,7 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 			eg.Go(func() error {
 				_, name_ok := labelMap[currentLabel.Name]
 				_, alias_ok := aliasMap[currentLabel.Name]
-				if (alias_ok && !name_ok) || name_ok {
+				if alias_ok || name_ok {
 					return nil
 				}
 				return c.deleteLabel(ctx, owner, repo, currentLabel.Name, dryRun)
@@ -136,17 +137,21 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 	for _, l := range labels {
 		l := l
 		eg.Go(func() error {
-			labelName := l.Name
 			currentLabel, ok := currentLabelMap[l.Name]
 			if !ok {
-				currentLabel, ok = currentLabelMap[l.Alias]
-				if !ok {
-					return c.createLabel(ctx, owner, repo, l, dryRun)
+				for _, alias := range l.Aliases {
+					currentLabel, ok = currentLabelMap[alias]
+					if ok {
+						break
+					}
 				}
-				labelName = l.Alias
+			}
+
+			if !ok {
+				return c.createLabel(ctx, owner, repo, l, dryRun)
 			}
 			if currentLabel.Description != l.Description || currentLabel.Color != l.Color || currentLabel.Name != l.Name {
-				return c.updateLabel(ctx, owner, repo, labelName, l, dryRun)
+				return c.updateLabel(ctx, owner, repo, currentLabel.Name, l, dryRun)
 			}
 			//fmt.Printf("Not changed: \"%s\" on %s/%s\n", l.Name, owner, repo)
 			return nil
