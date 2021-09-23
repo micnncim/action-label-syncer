@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -31,6 +32,8 @@ type Client struct {
 }
 
 type Label struct {
+	// If "import" is present, all other fields are ignored.
+	Import      string `yaml:"import"`
 	Name        string `yaml:"name"`
 	Alias       string `yaml:"alias"`
 	Aliases   []string `yaml:"aliases"`
@@ -43,9 +46,31 @@ func FromManifestToLabels(path string) ([]Label, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	var labels []Label
 	err = yaml.Unmarshal(buf, &labels)
-	return labels, err
+	if err != nil {
+		return nil, err
+	}
+
+	// Handle imports of labels from another file
+	var flatLabels []Label
+	for _, l := range labels {
+		if l.Import == "" {
+			flatLabels = append(flatLabels, l)
+		} else {
+			var importPath string
+			importPath = filepath.Join(filepath.Dir(path), l.Import)
+			var importedLabels []Label
+			importedLabels, err = FromManifestToLabels(importPath)
+			if err != nil {
+				return nil, err
+			}
+			flatLabels = append(flatLabels, importedLabels...)
+		}
+	}
+
+	return flatLabels, err
 }
 
 func NewClient(token string) *Client {
