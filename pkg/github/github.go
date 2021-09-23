@@ -148,7 +148,7 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 			if currentLabel.Description != l.Description || currentLabel.Color != l.Color || currentLabel.Name != l.Name {
 				return c.updateLabel(ctx, owner, repo, labelName, l, dryRun)
 			}
-			// fmt.Printf("label: %+v not changed on %s/%s\n", l, owner, repo)
+			//fmt.Printf("Not changed: \"%s\" on %s/%s\n", l.Name, owner, repo)
 			return nil
 		})
 	}
@@ -162,7 +162,7 @@ func (c *Client) createLabel(ctx context.Context, owner, repo string, label Labe
 		Description: &label.Description,
 		Color:       &label.Color,
 	}
-	fmt.Printf("label: %+v created on: %s/%s\n", label, owner, repo)
+	fmt.Printf("Created: \"%s\" on %s/%s\n", label.Name, owner, repo)
 	if dryRun {
 		return nil
 	}
@@ -201,7 +201,11 @@ func (c *Client) updateLabel(ctx context.Context, owner, repo, labelName string,
 		Description: &label.Description,
 		Color:       &label.Color,
 	}
-	fmt.Printf("label %+v updated on: %s/%s\n", label, owner, repo)
+	if labelName != label.Name {
+		fmt.Printf("Renamed: \"%s\" => \"%s\" on %s/%s\n", labelName, label.Name, owner, repo)
+	} else {
+		fmt.Printf("Updated: \"%s\" on %s/%s\n", label.Name, owner, repo)
+	}
 	if dryRun {
 		return nil
 	}
@@ -210,7 +214,7 @@ func (c *Client) updateLabel(ctx context.Context, owner, repo, labelName string,
 }
 
 func (c *Client) deleteLabel(ctx context.Context, owner, repo, name string, dryRun bool) error {
-	fmt.Printf("label: %s deleted from: %s/%s\n", name, owner, repo)
+	fmt.Printf("Deleted: \"%s\" on %s/%s\n", name, owner, repo)
 	if dryRun {
 		return nil
 	}
