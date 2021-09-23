@@ -77,7 +77,7 @@ func run(ctx context.Context) error {
 		owner, repo := s[0], s[1]
 
 		if err := client.SyncLabels(ctx, owner, repo, labels, prune, dryRun); err != nil {
-			err = multierr.Append(err, fmt.Errorf("unable to sync labels: %w", err))
+			return fmt.Errorf("unable to sync labels: %w", err)
 		}
 	}
 
