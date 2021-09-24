@@ -22,7 +22,6 @@ import (
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
-	"golang.org/x/sync/errgroup"
 	"gopkg.in/yaml.v2"
 )
 
@@ -112,53 +111,50 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 		currentLabelMap[l.Name] = l
 	}
 
-	eg := errgroup.Group{}
-
 	// Delete labels.
 	if prune {
 		for _, currentLabel := range currentLabels {
 			currentLabel := currentLabel
-			eg.Go(func() error {
-				_, name_ok := labelMap[currentLabel.Name]
-				_, alias_ok := aliasMap[currentLabel.Name]
-				if alias_ok || name_ok {
-					return nil
+			_, name_ok := labelMap[currentLabel.Name]
+			_, alias_ok := aliasMap[currentLabel.Name]
+			if !alias_ok && !name_ok {
+				err := c.deleteLabel(ctx, owner, repo, currentLabel.Name, dryRun)
+				if err != nil {
+					return err
 				}
-				return c.deleteLabel(ctx, owner, repo, currentLabel.Name, dryRun)
-			})
-		}
-
-		if err := eg.Wait(); err != nil {
-			return err
+			}
 		}
 	}
 
 	// Create and/or update labels.
 	for _, l := range labels {
 		l := l
-		eg.Go(func() error {
-			currentLabel, ok := currentLabelMap[l.Name]
-			if !ok {
-				for _, alias := range l.Aliases {
-					currentLabel, ok = currentLabelMap[alias]
-					if ok {
-						break
-					}
+		currentLabel, ok := currentLabelMap[l.Name]
+		if !ok {
+			for _, alias := range l.Aliases {
+				currentLabel, ok = currentLabelMap[alias]
+				if ok {
+					break
 				}
 			}
+		}
 
-			if !ok {
-				return c.createLabel(ctx, owner, repo, l, dryRun)
+		if !ok {
+			err := c.createLabel(ctx, owner, repo, l, dryRun)
+			if err != nil {
+				return err
 			}
-			if currentLabel.Description != l.Description || currentLabel.Color != l.Color || currentLabel.Name != l.Name {
-				return c.updateLabel(ctx, owner, repo, currentLabel.Name, l, dryRun)
+		} else if currentLabel.Description != l.Description || currentLabel.Color != l.Color || currentLabel.Name != l.Name {
+			err := c.updateLabel(ctx, owner, repo, currentLabel.Name, l, dryRun)
+			if err != nil {
+				return err
 			}
+		} else {
 			//fmt.Printf("Not changed: \"%s\" on %s/%s\n", l.Name, owner, repo)
-			return nil
-		})
+		}
 	}
 
-	return eg.Wait()
+	return nil
 }
 
 func (c *Client) createLabel(ctx context.Context, owner, repo string, label Label, dryRun bool) error {
