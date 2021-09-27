@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
+	"strings"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -58,6 +59,9 @@ func FromManifestToLabels(path string) ([]Label, error) {
 			// Data checks and normalization.
 			if len(l.Description) > 100 {
 				return nil, fmt.Errorf("Description of \"%s\" exceeds 100 characters", l.Name)
+			}
+			if strings.Contains(l.Name, "?") {
+				return nil, fmt.Errorf("Label name cannot contain question marks: \"%s\"", l.Name)
 			}
 			if l.Alias != "" {
 				l.Aliases = append(l.Aliases, l.Alias)
