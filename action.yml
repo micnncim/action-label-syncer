@@ -16,6 +16,13 @@ inputs:
     description: "Remove unmanaged labels from repository"
     required: false
     default: true
+  labelExcludePattern:
+    description: "Regular expression to exclude labels from syncing"
+    required: false
+  dryRun:
+    description: "No label is create/updated or deleted"
+    required: false
+    default: false
 runs:
   using: "docker"
   image: "Dockerfile"

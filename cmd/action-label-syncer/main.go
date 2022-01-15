@@ -27,9 +27,14 @@ import (
 )
 
 func main() {
+
+	fmt.Println("START SYNCER!!!")
+
 	if err := run(context.Background()); err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("END SYNCER!!!")
 }
 
 func run(ctx context.Context) error {
@@ -55,6 +60,13 @@ func run(ctx context.Context) error {
 		repository = os.Getenv("GITHUB_REPOSITORY")
 	}
 
+	labelExcludePattern := os.Getenv("INPUT_LABELEXCLUDEPATTERN")
+
+	dryRun, err := strconv.ParseBool(os.Getenv("INPUT_DRYRUN"))
+	if err != nil {
+		return fmt.Errorf("unable to parse dryRun: %w", err)
+	}
+
 	// Doesn't run concurrently to avoid GitHub API rate limit.
 	for _, r := range strings.Split(repository, "\n") {
 		if len(r) == 0 {
@@ -67,7 +79,7 @@ func run(ctx context.Context) error {
 		}
 		owner, repo := s[0], s[1]
 
-		if err := client.SyncLabels(ctx, owner, repo, labels, prune); err != nil {
+		if err := client.SyncLabels(ctx, owner, repo, labels, prune, labelExcludePattern, dryRun); err != nil {
 			err = multierr.Append(err, fmt.Errorf("unable to sync labels: %w", err))
 		}
 	}

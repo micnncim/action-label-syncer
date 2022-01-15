@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"regexp"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -57,7 +58,7 @@ func NewClient(token string) *Client {
 	}
 }
 
-func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []Label, prune bool) error {
+func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []Label, prune bool, labelExcludePattern string, dryRun bool) error {
 	labelMap := make(map[string]Label)
 	for _, l := range labels {
 		labelMap[l.Name] = l
@@ -67,6 +68,27 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 	if err != nil {
 		return err
 	}
+
+	// Exclude current lables from syncing
+	if len(labelExcludePattern) != 0 {
+		fmt.Println("Exclude labels via this pattern: " + labelExcludePattern)
+		var cleanedArray []Label
+		for _, l := range currentLabels {
+			labelName := l.Name
+			matchExclude, err := regexp.MatchString(labelExcludePattern, labelName)
+			if err != nil {
+				return err
+			}
+			if matchExclude {
+				fmt.Printf("Exclude Label %+v\n", l)
+			} else {
+				fmt.Printf("Sync Label %+v\n", l)
+				cleanedArray = append(cleanedArray, l)
+			}
+		}
+		currentLabels = cleanedArray
+	}
+
 	currentLabelMap := make(map[string]Label)
 	for _, l := range currentLabels {
 		currentLabelMap[l.Name] = l
@@ -83,7 +105,12 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 				if ok {
 					return nil
 				}
-				return c.deleteLabel(ctx, owner, repo, currentLabel.Name)
+				if dryRun {
+					fmt.Printf("DRYRUN: Delete Label %+v\n", currentLabel)
+				} else {
+					return c.deleteLabel(ctx, owner, repo, currentLabel.Name)
+				}
+				return nil
 			})
 		}
 
@@ -98,12 +125,22 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 		eg.Go(func() error {
 			currentLabel, ok := currentLabelMap[l.Name]
 			if !ok {
-				return c.createLabel(ctx, owner, repo, l)
+				if dryRun {
+					fmt.Printf("DRYRUN: Create Label %+v\n", l)
+					return nil
+				} else {
+					return c.createLabel(ctx, owner, repo, l)
+				}
 			}
 			if currentLabel.Description != l.Description || currentLabel.Color != l.Color {
-				return c.updateLabel(ctx, owner, repo, l)
+				if dryRun {
+					fmt.Printf("DRYRUN: Update Label %+v\n", l)
+					return nil
+				} else {
+					return c.updateLabel(ctx, owner, repo, l)
+				}
 			}
-			fmt.Printf("label: %+v not changed on %s/%s\n", l, owner, repo)
+			fmt.Printf("not changed label: %+v on %s/%s\n", l, owner, repo)
 			return nil
 		})
 	}
@@ -118,7 +155,7 @@ func (c *Client) createLabel(ctx context.Context, owner, repo string, label Labe
 		Color:       &label.Color,
 	}
 	_, _, err := c.githubClient.Issues.CreateLabel(ctx, owner, repo, l)
-	fmt.Printf("label: %+v created on: %s/%s\n", label, owner, repo)
+	fmt.Printf("created label: %+v on: %s/%s\n", label, owner, repo)
 	return err
 }
 
@@ -154,12 +191,12 @@ func (c *Client) updateLabel(ctx context.Context, owner, repo string, label Labe
 		Color:       &label.Color,
 	}
 	_, _, err := c.githubClient.Issues.EditLabel(ctx, owner, repo, label.Name, l)
-	fmt.Printf("label %+v updated on: %s/%s\n", label, owner, repo)
+	fmt.Printf("updated label %+v on: %s/%s\n", label, owner, repo)
 	return err
 }
 
 func (c *Client) deleteLabel(ctx context.Context, owner, repo, name string) error {
 	_, err := c.githubClient.Issues.DeleteLabel(ctx, owner, repo, name)
-	fmt.Printf("label: %s deleted from: %s/%s\n", name, owner, repo)
+	fmt.Printf("deleted label: %s from: %s/%s\n", name, owner, repo)
 	return err
 }

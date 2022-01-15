@@ -63,6 +63,9 @@ All issues and PRs that were previously labeled with this label are now unlabele
 
 You can add `jobs.<job_id>.steps.with.prune: false` in order to preserver all existing labels which is not mentioned in `manifest`, in this case when a label will be renamed old label will be not deleted.
 
+An other option is to exclude labels from syncing. If you enter `jobs.<job_id>.steps.with.labelExcludePattern: feature:.*` will exclude labels like `feature: new login` from syncing/deleting.
+
+If you want a "dry test run" you can use  `jobs.<job_id>.steps.with.dryRun: true` to simulate the create/update or delete action.
 ## Sync labels on another repository
 
 It is also possible to specify a repository or repositories as an input to the action. This is useful if you want to store your labels somewhere centrally and modify multiple repository labels.
