@@ -18,6 +18,7 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"strings"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
@@ -41,9 +42,19 @@ func FromManifestToLabels(path string) ([]Label, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	var labels []Label
-	err = yaml.Unmarshal(buf, &labels)
-	return labels, err
+
+	if err := yaml.Unmarshal(buf, &labels); err != nil {
+		return labels, err
+	}
+
+	for i, label := range labels {
+		label.Color = strings.TrimPrefix(label.Color, "#")
+		labels[i] = label
+	}
+
+	return labels, nil
 }
 
 func NewClient(token string) *Client {

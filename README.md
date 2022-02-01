@@ -33,6 +33,8 @@ The default file path is `.github/labels.yml`, but you can specify any file path
 
 To create manifest of the current labels easily, using [label-exporter](https://github.com/micnncim/label-exporter) is recommended.
 
+Color code can be defined in either format `d73a4a` or `'#d73a4a'` (note the quotes).
+
 ### Create Workflow
 
 An example workflow is here.
