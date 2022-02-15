@@ -44,6 +44,15 @@ func run(ctx context.Context) error {
 		return fmt.Errorf("unable to parse prune: %w", err)
 	}
 
+	dryRun := false
+	dryRunEnv := os.Getenv("INPUT_DRY_RUN")
+	if dryRunEnv != "" {
+		dryRun, err = strconv.ParseBool(os.Getenv("INPUT_DRY_RUN"))
+		if err != nil {
+			return fmt.Errorf("unable to parse dry-run: %w", err)
+		}
+	}
+
 	token := os.Getenv("INPUT_TOKEN")
 	if len(token) == 0 {
 		token = os.Getenv("GITHUB_TOKEN")
@@ -67,8 +76,8 @@ func run(ctx context.Context) error {
 		}
 		owner, repo := s[0], s[1]
 
-		if err := client.SyncLabels(ctx, owner, repo, labels, prune); err != nil {
-			err = multierr.Append(err, fmt.Errorf("unable to sync labels: %w", err))
+		if err := client.SyncLabels(ctx, owner, repo, labels, prune, dryRun); err != nil {
+			return fmt.Errorf("unable to sync labels: %w", err)
 		}
 	}
 

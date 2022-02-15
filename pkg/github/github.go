@@ -18,10 +18,11 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
+	"strings"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
-	"golang.org/x/sync/errgroup"
 	"gopkg.in/yaml.v2"
 )
 
@@ -31,7 +32,11 @@ type Client struct {
 }
 
 type Label struct {
+	// If "import" is present, all other fields are ignored.
+	Import      string `yaml:"import"`
 	Name        string `yaml:"name"`
+	Alias       string `yaml:"alias"`
+	Aliases   []string `yaml:"aliases"`
 	Description string `yaml:"description"`
 	Color       string `yaml:"color"`
 }
@@ -41,9 +46,39 @@ func FromManifestToLabels(path string) ([]Label, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	var labels []Label
 	err = yaml.Unmarshal(buf, &labels)
-	return labels, err
+	if err != nil {
+		return nil, err
+	}
+
+	var flatLabels []Label
+	for _, l := range labels {
+		if l.Import == "" {
+			// Data checks and normalization.
+			if len(l.Description) > 100 {
+				return nil, fmt.Errorf("Description of \"%s\" exceeds 100 characters", l.Name)
+			}
+			if strings.Contains(l.Name, "?") {
+				return nil, fmt.Errorf("Label name cannot contain question marks: \"%s\"", l.Name)
+			}
+			if l.Alias != "" {
+				l.Aliases = append(l.Aliases, l.Alias)
+			}
+			flatLabels = append(flatLabels, l)
+		} else {
+			// Handle imports of labels from another file
+			importPath := filepath.Join(filepath.Dir(path), l.Import)
+			importedLabels, err := FromManifestToLabels(importPath)
+			if err != nil {
+				return nil, err
+			}
+			flatLabels = append(flatLabels, importedLabels...)
+		}
+	}
+
+	return flatLabels, err
 }
 
 func NewClient(token string) *Client {
@@ -57,10 +92,18 @@ func NewClient(token string) *Client {
 	}
 }
 
-func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []Label, prune bool) error {
+func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []Label, prune bool, dryRun bool) error {
+	if dryRun {
+		fmt.Printf("Dry run!  No actual changes will be made.\n")
+	}
+
 	labelMap := make(map[string]Label)
+	aliasMap := make(map[string]Label)
 	for _, l := range labels {
 		labelMap[l.Name] = l
+		for _, alias := range l.Aliases {
+			aliasMap[alias] = l
+		}
 	}
 
 	currentLabels, err := c.getLabels(ctx, owner, repo)
@@ -72,53 +115,63 @@ func (c *Client) SyncLabels(ctx context.Context, owner, repo string, labels []La
 		currentLabelMap[l.Name] = l
 	}
 
-	eg := errgroup.Group{}
-
 	// Delete labels.
 	if prune {
 		for _, currentLabel := range currentLabels {
 			currentLabel := currentLabel
-			eg.Go(func() error {
-				_, ok := labelMap[currentLabel.Name]
-				if ok {
-					return nil
+			_, name_ok := labelMap[currentLabel.Name]
+			_, alias_ok := aliasMap[currentLabel.Name]
+			if !alias_ok && !name_ok {
+				err := c.deleteLabel(ctx, owner, repo, currentLabel.Name, dryRun)
+				if err != nil {
+					return err
 				}
-				return c.deleteLabel(ctx, owner, repo, currentLabel.Name)
-			})
-		}
-
-		if err := eg.Wait(); err != nil {
-			return err
+			}
 		}
 	}
 
 	// Create and/or update labels.
 	for _, l := range labels {
 		l := l
-		eg.Go(func() error {
-			currentLabel, ok := currentLabelMap[l.Name]
-			if !ok {
-				return c.createLabel(ctx, owner, repo, l)
+		currentLabel, ok := currentLabelMap[l.Name]
+		if !ok {
+			for _, alias := range l.Aliases {
+				currentLabel, ok = currentLabelMap[alias]
+				if ok {
+					break
+				}
 			}
-			if currentLabel.Description != l.Description || currentLabel.Color != l.Color {
-				return c.updateLabel(ctx, owner, repo, l)
+		}
+
+		if !ok {
+			err := c.createLabel(ctx, owner, repo, l, dryRun)
+			if err != nil {
+				return err
 			}
-			fmt.Printf("label: %+v not changed on %s/%s\n", l, owner, repo)
-			return nil
-		})
+		} else if currentLabel.Description != l.Description || currentLabel.Color != l.Color || currentLabel.Name != l.Name {
+			err := c.updateLabel(ctx, owner, repo, currentLabel.Name, l, dryRun)
+			if err != nil {
+				return err
+			}
+		} else {
+			//fmt.Printf("Not changed: \"%s\" on %s/%s\n", l.Name, owner, repo)
+		}
 	}
 
-	return eg.Wait()
+	return nil
 }
 
-func (c *Client) createLabel(ctx context.Context, owner, repo string, label Label) error {
+func (c *Client) createLabel(ctx context.Context, owner, repo string, label Label, dryRun bool) error {
 	l := &github.Label{
 		Name:        &label.Name,
 		Description: &label.Description,
 		Color:       &label.Color,
 	}
+	fmt.Printf("Created: \"%s\" on %s/%s\n", label.Name, owner, repo)
+	if dryRun {
+		return nil
+	}
 	_, _, err := c.githubClient.Issues.CreateLabel(ctx, owner, repo, l)
-	fmt.Printf("label: %+v created on: %s/%s\n", label, owner, repo)
 	return err
 }
 
@@ -147,19 +200,29 @@ func (c *Client) getLabels(ctx context.Context, owner, repo string) ([]Label, er
 	return labels, nil
 }
 
-func (c *Client) updateLabel(ctx context.Context, owner, repo string, label Label) error {
+func (c *Client) updateLabel(ctx context.Context, owner, repo, labelName string, label Label, dryRun bool) error {
 	l := &github.Label{
 		Name:        &label.Name,
 		Description: &label.Description,
 		Color:       &label.Color,
 	}
-	_, _, err := c.githubClient.Issues.EditLabel(ctx, owner, repo, label.Name, l)
-	fmt.Printf("label %+v updated on: %s/%s\n", label, owner, repo)
+	if labelName != label.Name {
+		fmt.Printf("Renamed: \"%s\" => \"%s\" on %s/%s\n", labelName, label.Name, owner, repo)
+	} else {
+		fmt.Printf("Updated: \"%s\" on %s/%s\n", label.Name, owner, repo)
+	}
+	if dryRun {
+		return nil
+	}
+	_, _, err := c.githubClient.Issues.EditLabel(ctx, owner, repo, labelName, l)
 	return err
 }
 
-func (c *Client) deleteLabel(ctx context.Context, owner, repo, name string) error {
+func (c *Client) deleteLabel(ctx context.Context, owner, repo, name string, dryRun bool) error {
+	fmt.Printf("Deleted: \"%s\" on %s/%s\n", name, owner, repo)
+	if dryRun {
+		return nil
+	}
 	_, err := c.githubClient.Issues.DeleteLabel(ctx, owner, repo, name)
-	fmt.Printf("label: %s deleted from: %s/%s\n", name, owner, repo)
 	return err
 }

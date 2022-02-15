@@ -16,6 +16,10 @@ inputs:
     description: "Remove unmanaged labels from repository"
     required: false
     default: true
+  dry_run:
+    description: "Print what would be done, but do nothing"
+    required: false
+    default: false
 runs:
   using: "docker"
   image: "Dockerfile"
