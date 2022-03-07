@@ -6,8 +6,6 @@ on:
       - '.github/labels.yml'
     branches:
       - master
-  workflow_dispatch:
-
 jobs:
   build:
     name: Sync labels
