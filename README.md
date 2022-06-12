@@ -1,4 +1,4 @@
-![logo](docs/assets/logo.png)
+![logo](https://raw.githubusercontent.com/micnncim/action-label-syncer/master/docs/assets/logo.png)
 
 [![actions-workflow-test][actions-workflow-test-badge]][actions-workflow-test]
 [![actions-marketplace][actions-marketplace-badge]][actions-marketplace]
