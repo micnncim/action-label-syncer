@@ -46,14 +46,18 @@ func FromManifestToLabels(path string) ([]Label, error) {
 	return labels, err
 }
 
-func NewClient(token string) *Client {
+func NewClient(token string, rawurl string) *Client {
 	ctx := context.Background()
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
 	)
 	tc := oauth2.NewClient(ctx, ts)
+	githubClient, err := github.NewEnterpriseClient(rawurl, rawurl, tc)
+	if err != nil {
+		panic(err)
+	}
 	return &Client{
-		githubClient: github.NewClient(tc),
+		githubClient: githubClient,
 	}
 }
 

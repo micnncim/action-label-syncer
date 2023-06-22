@@ -1,11 +1,5 @@
-![logo](docs/assets/logo.png)
-
-[![actions-workflow-test][actions-workflow-test-badge]][actions-workflow-test]
-[![actions-marketplace][actions-marketplace-badge]][actions-marketplace]
-[![release][release-badge]][release]
-[![pkg.go.dev][pkg.go.dev-badge]][pkg.go.dev]
-[![dependabot][dependabot-badge]][dependabot]
-[![license][license-badge]][license]
+## Heads up
+⚠️ ‼️ I'm archiving this fork, as GHES and GHAE customers should use https://github.com/github/safe-settings#the-settings-file for this instead
 
 GitHub Actions workflow to sync GitHub labels in the declarative way.
 

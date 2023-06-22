@@ -48,7 +48,10 @@ func run(ctx context.Context) error {
 	if len(token) == 0 {
 		token = os.Getenv("GITHUB_TOKEN")
 	}
-	client := github.NewClient(token)
+
+	rawurl := os.Getenv("GITHUB_API_URL")
+
+	client := github.NewClient(token, rawurl)
 
 	repository := os.Getenv("INPUT_REPOSITORY")
 	if len(repository) == 0 {
